@@ -3,10 +3,13 @@
     <actionCalls>
         <name>Customer_Emails</name>
         <label>Customer Email</label>
-        <locationX>2534</locationX>
-        <locationY>558</locationY>
+        <locationX>491</locationX>
+        <locationY>753</locationY>
         <actionName>emailSimple</actionName>
         <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>Movie_Record_Screen</targetReference>
+        </connector>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>emailAddresses</name>
@@ -34,7 +37,7 @@
         <name>Customer_ID_Assigner</name>
         <label>Customer ID Assigner</label>
         <locationX>1320</locationX>
-        <locationY>499</locationY>
+        <locationY>621</locationY>
         <assignmentItems>
             <assignToReference>customer_id_variable</assignToReference>
             <operator>Assign</operator>
@@ -50,7 +53,7 @@
         <name>Customer_ID_Assigner_0</name>
         <label>Customer ID Assigner</label>
         <locationX>1580</locationX>
-        <locationY>680</locationY>
+        <locationY>802</locationY>
         <assignmentItems>
             <assignToReference>customer_id_variable</assignToReference>
             <operator>Assign</operator>
@@ -66,7 +69,7 @@
         <name>Paid_Status_Assigner</name>
         <label>Paid Status Assigner</label>
         <locationX>2148</locationX>
-        <locationY>442</locationY>
+        <locationY>564</locationY>
         <assignmentItems>
             <assignToReference>paid_status_variable</assignToReference>
             <operator>Assign</operator>
@@ -78,6 +81,22 @@
             <targetReference>Payment_Record_Creation</targetReference>
         </connector>
     </assignments>
+    <choices>
+        <name>email_radio</name>
+        <choiceText>E-mail</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>emailRadio</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>lastName_radio</name>
+        <choiceText>Last Name</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>lastNameRadio</stringValue>
+        </value>
+    </choices>
     <choices>
         <name>mode_offline</name>
         <choiceText>Offline</choiceText>
@@ -94,11 +113,27 @@
             <stringValue>Online</stringValue>
         </value>
     </choices>
+    <choices>
+        <name>newCreation_radio</name>
+        <choiceText>Create New Record</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>recordCreationRadio</stringValue>
+        </value>
+    </choices>
+    <choices>
+        <name>phone_radio_button</name>
+        <choiceText>Phone</choiceText>
+        <dataType>String</dataType>
+        <value>
+            <stringValue>Phone</stringValue>
+        </value>
+    </choices>
     <decisions>
         <name>Amount_Paid_Decision</name>
         <label>Amount Paid Decision</label>
         <locationX>2257</locationX>
-        <locationY>332</locationY>
+        <locationY>454</locationY>
         <defaultConnector>
             <targetReference>Payment_Record_Creation</targetReference>
         </defaultConnector>
@@ -120,10 +155,35 @@
         </rules>
     </decisions>
     <decisions>
+        <name>Creation_Radio_Decision</name>
+        <label>Creation Radio Decision</label>+
+        <locationX>1344</locationX>
+        <locationY>50</locationY>
+        <defaultConnector>
+            <targetReference>Getting_Customer_Detail_Record</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Normal Flow</defaultConnectorLabel>
+        <rules>
+            <name>Creation_Radio</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>newCreation_radio</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Customer_Detail_Not_Found_Screen</targetReference>
+            </connector>
+            <label>Creation Radio</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>Customer_Detail_Decision</name>
         <label>Customer Detail Decision</label>
         <locationX>1571</locationX>
-        <locationY>234</locationY>
+        <locationY>356</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>If_Customer_Found</name>
@@ -193,32 +253,32 @@
         <name>Creating_Customer_Record</name>
         <label>Creating Customer Record</label>
         <locationX>1574</locationX>
-        <locationY>542</locationY>
+        <locationY>664</locationY>
         <connector>
             <targetReference>Customer_ID_Assigner_0</targetReference>
         </connector>
         <inputAssignments>
             <field>Email__c</field>
             <value>
-                <elementReference>customer_email_0_0.value</elementReference>
+                <elementReference>customer_email_not_found.value</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
             <field>Last_Name__c</field>
             <value>
-                <elementReference>customer_name_0_0.lastName</elementReference>
+                <elementReference>customer_name_not_found.lastName</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
             <field>Name</field>
             <value>
-                <elementReference>customer_name_0_0.firstName</elementReference>
+                <elementReference>customer_name_not_found.firstName</elementReference>
             </value>
         </inputAssignments>
         <inputAssignments>
             <field>Phone__c</field>
             <value>
-                <elementReference>customer_phone_0_0.value</elementReference>
+                <elementReference>customer_phone_not_found.value</elementReference>
             </value>
         </inputAssignments>
         <object>Customer_Detail__c</object>
@@ -228,7 +288,7 @@
         <name>Payment_Record_Creation</name>
         <label>Payment Record Creation</label>
         <locationX>2257</locationX>
-        <locationY>632</locationY>
+        <locationY>754</locationY>
         <connector>
             <targetReference>Customer_Emails</targetReference>
         </connector>
@@ -257,7 +317,7 @@
         <name>Ticket_Record_Creation</name>
         <label>Ticket Record Creation</label>
         <locationX>2255</locationX>
-        <locationY>50</locationY>
+        <locationY>172</locationY>
         <connector>
             <targetReference>Booking_Summary_Screen</targetReference>
         </connector>
@@ -291,39 +351,32 @@
     <recordLookups>
         <name>Getting_Customer_Detail_Record</name>
         <label>Getting Customer Detail Record</label>
-        <locationX>1580</locationX>
-        <locationY>66</locationY>
+        <locationX>1477</locationX>
+        <locationY>133</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Customer_Detail_Decision</targetReference>
         </connector>
-        <filterLogic>(1 OR 2 OR 3 OR 4) OR (1 AND 2 AND 3 AND 4) OR (1 AND 3) OR (1 AND 4) OR (1 AND 3  AND 4)</filterLogic>
-        <filters>
-            <field>Last_Name__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>customer_name.lastName</elementReference>
-            </value>
-        </filters>
-        <filters>
-            <field>Name</field>
-            <operator>EqualTo</operator>
-            <value>
-                <elementReference>customer_name.firstName</elementReference>
-            </value>
-        </filters>
+        <filterLogic>or</filterLogic>
         <filters>
             <field>Phone__c</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>customer_phone.value</elementReference>
+                <elementReference>customer_Search_phone.value</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Last_Name__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>customer_search_lastName</elementReference>
             </value>
         </filters>
         <filters>
             <field>Email__c</field>
             <operator>EqualTo</operator>
             <value>
-                <elementReference>customer_email.value</elementReference>
+                <elementReference>customer_search_email.value</elementReference>
             </value>
         </filters>
         <getFirstRecordOnly>true</getFirstRecordOnly>
@@ -334,7 +387,7 @@
         <name>Getting_Movies_Record</name>
         <label>Getting Movies Record</label>
         <locationX>493</locationX>
-        <locationY>84</locationY>
+        <locationY>206</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Movie_Record_Screen</targetReference>
@@ -362,7 +415,7 @@
         <name>Getting_Seats_Record</name>
         <label>Getting Seats Record</label>
         <locationX>811</locationX>
-        <locationY>86</locationY>
+        <locationY>208</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Getting_Show_Timmings_Record</targetReference>
@@ -383,7 +436,7 @@
         <name>Getting_Show_Timmings_Record</name>
         <label>Getting Show Timmings Record</label>
         <locationX>970</locationX>
-        <locationY>86</locationY>
+        <locationY>208</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Seats_Required</targetReference>
@@ -404,7 +457,7 @@
         <name>Booking_Summary_Screen</name>
         <label>Booking Summary Screen</label>
         <locationX>2259</locationX>
-        <locationY>207</locationY>
+        <locationY>329</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -528,7 +581,7 @@
         <name>Customer_Detail_Found_Screen</name>
         <label>Customer Detail Found Screen</label>
         <locationX>1320</locationX>
-        <locationY>323</locationY>
+        <locationY>445</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -543,7 +596,7 @@
                 <name>Customer_Details_0_Column1</name>
                 <fieldType>Region</fieldType>
                 <fields>
-                    <name>customer_name_0</name>
+                    <name>customer_name_found</name>
                     <extensionName>flowruntime:name</extensionName>
                     <fieldType>ComponentInstance</fieldType>
                     <inputParameters>
@@ -580,7 +633,7 @@
                 <name>Customer_Details_0_Column2</name>
                 <fieldType>Region</fieldType>
                 <fields>
-                    <name>customer_phone_0</name>
+                    <name>customer_phone_found</name>
                     <extensionName>flowruntime:phone</extensionName>
                     <fieldType>ComponentInstance</fieldType>
                     <inputParameters>
@@ -600,7 +653,7 @@
                     <storeOutputAutomatically>true</storeOutputAutomatically>
                 </fields>
                 <fields>
-                    <name>customer_email_0</name>
+                    <name>customer_email_found</name>
                     <extensionName>flowruntime:email</extensionName>
                     <fieldType>ComponentInstance</fieldType>
                     <inputParameters>
@@ -636,8 +689,8 @@
     <screens>
         <name>Customer_Detail_Not_Found_Screen</name>
         <label>Customer Detail Not Found Screen</label>
-        <locationX>1575</locationX>
-        <locationY>385</locationY>
+        <locationX>1571</locationX>
+        <locationY>531</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -652,19 +705,13 @@
                 <name>Customer_Details_0_0_Column1</name>
                 <fieldType>Region</fieldType>
                 <fields>
-                    <name>customer_name_0_0</name>
+                    <name>customer_name_not_found</name>
                     <extensionName>flowruntime:name</extensionName>
                     <fieldType>ComponentInstance</fieldType>
                     <inputParameters>
-                        <name>firstName</name>
-                        <value>
-                            <elementReference>customer_name.firstName</elementReference>
-                        </value>
-                    </inputParameters>
-                    <inputParameters>
                         <name>lastName</name>
                         <value>
-                            <elementReference>customer_name.lastName</elementReference>
+                            <elementReference>customer_search_lastName</elementReference>
                         </value>
                     </inputParameters>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
@@ -683,13 +730,13 @@
                 <name>Customer_Details_0_0_Column2</name>
                 <fieldType>Region</fieldType>
                 <fields>
-                    <name>customer_phone_0_0</name>
+                    <name>customer_phone_not_found</name>
                     <extensionName>flowruntime:phone</extensionName>
                     <fieldType>ComponentInstance</fieldType>
                     <inputParameters>
                         <name>value</name>
                         <value>
-                            <elementReference>customer_phone.value</elementReference>
+                            <elementReference>customer_Search_phone.value</elementReference>
                         </value>
                     </inputParameters>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
@@ -697,13 +744,13 @@
                     <storeOutputAutomatically>true</storeOutputAutomatically>
                 </fields>
                 <fields>
-                    <name>customer_email_0_0</name>
+                    <name>customer_email_not_found</name>
                     <extensionName>flowruntime:email</extensionName>
                     <fieldType>ComponentInstance</fieldType>
                     <inputParameters>
                         <name>value</name>
                         <value>
-                            <elementReference>customer_email.value</elementReference>
+                            <elementReference>customer_search_email.value</elementReference>
                         </value>
                     </inputParameters>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
@@ -727,18 +774,45 @@
     <screens>
         <name>Customer_Detail_Search_Screen</name>
         <label>Customer Detail Search Screen</label>
-        <locationX>1260</locationX>
-        <locationY>96</locationY>
+        <locationX>1236</locationX>
+        <locationY>153</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
         <connector>
-            <targetReference>Getting_Customer_Detail_Record</targetReference>
+            <targetReference>Creation_Radio_Decision</targetReference>
         </connector>
         <fields>
             <name>customer_info_display</name>
             <fieldText>&lt;p&gt;&lt;strong&gt;&lt;em&gt;Enter any Field to search customer detail records.&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;</fieldText>
             <fieldType>DisplayText</fieldType>
+        </fields>
+        <fields>
+            <name>Customer_Detail_Search_Screen_Section1</name>
+            <fieldType>RegionContainer</fieldType>
+            <fields>
+                <name>Customer_Detail_Search_Screen_Section1_Column1</name>
+                <fieldType>Region</fieldType>
+                <fields>
+                    <name>customer_search_radio</name>
+                    <choiceReferences>lastName_radio</choiceReferences>
+                    <choiceReferences>phone_radio_button</choiceReferences>
+                    <choiceReferences>email_radio</choiceReferences>
+                    <choiceReferences>newCreation_radio</choiceReferences>
+                    <dataType>String</dataType>
+                    <fieldType>RadioButtons</fieldType>
+                    <isRequired>false</isRequired>
+                </fields>
+                <inputParameters>
+                    <name>width</name>
+                    <value>
+                        <stringValue>12</stringValue>
+                    </value>
+                </inputParameters>
+                <isRequired>false</isRequired>
+            </fields>
+            <isRequired>false</isRequired>
+            <regionContainerType>SectionWithoutHeader</regionContainerType>
         </fields>
         <fields>
             <name>Customer_Details_Search</name>
@@ -748,44 +822,62 @@
                 <name>Customer_Details_Search_Column1</name>
                 <fieldType>Region</fieldType>
                 <fields>
-                    <name>customer_name</name>
-                    <extensionName>flowruntime:name</extensionName>
-                    <fieldType>ComponentInstance</fieldType>
-                    <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
-                    <isRequired>true</isRequired>
-                    <storeOutputAutomatically>true</storeOutputAutomatically>
-                </fields>
-                <inputParameters>
-                    <name>width</name>
-                    <value>
-                        <stringValue>6</stringValue>
-                    </value>
-                </inputParameters>
-                <isRequired>false</isRequired>
-            </fields>
-            <fields>
-                <name>Customer_Details_Search_Column2</name>
-                <fieldType>Region</fieldType>
-                <fields>
-                    <name>customer_phone</name>
+                    <name>customer_Search_phone</name>
                     <extensionName>flowruntime:phone</extensionName>
                     <fieldType>ComponentInstance</fieldType>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <storeOutputAutomatically>true</storeOutputAutomatically>
+                    <visibilityRule>
+                        <conditionLogic>and</conditionLogic>
+                        <conditions>
+                            <leftValueReference>customer_search_radio</leftValueReference>
+                            <operator>EqualTo</operator>
+                            <rightValue>
+                                <elementReference>phone_radio_button</elementReference>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
                 </fields>
                 <fields>
-                    <name>customer_email</name>
+                    <name>customer_search_lastName</name>
+                    <dataType>String</dataType>
+                    <fieldText>Last Name</fieldText>
+                    <fieldType>InputField</fieldType>
+                    <isRequired>false</isRequired>
+                    <visibilityRule>
+                        <conditionLogic>and</conditionLogic>
+                        <conditions>
+                            <leftValueReference>customer_search_radio</leftValueReference>
+                            <operator>EqualTo</operator>
+                            <rightValue>
+                                <elementReference>lastName_radio</elementReference>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
+                </fields>
+                <fields>
+                    <name>customer_search_email</name>
                     <extensionName>flowruntime:email</extensionName>
                     <fieldType>ComponentInstance</fieldType>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <storeOutputAutomatically>true</storeOutputAutomatically>
+                    <visibilityRule>
+                        <conditionLogic>and</conditionLogic>
+                        <conditions>
+                            <leftValueReference>customer_search_radio</leftValueReference>
+                            <operator>EqualTo</operator>
+                            <rightValue>
+                                <elementReference>email_radio</elementReference>
+                            </rightValue>
+                        </conditions>
+                    </visibilityRule>
                 </fields>
                 <inputParameters>
                     <name>width</name>
                     <value>
-                        <stringValue>6</stringValue>
+                        <stringValue>12</stringValue>
                     </value>
                 </inputParameters>
                 <isRequired>false</isRequired>
@@ -800,7 +892,7 @@
         <name>Movie_Record_Screen</name>
         <label>Movie Record Screen</label>
         <locationX>628</locationX>
-        <locationY>93</locationY>
+        <locationY>215</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -824,13 +916,13 @@
             <inputParameters>
                 <name>selectionMode</name>
                 <value>
-                    <stringValue>MULTI_SELECT</stringValue>
+                    <stringValue>SINGLE_SELECT</stringValue>
                 </value>
             </inputParameters>
             <inputParameters>
                 <name>minRowSelection</name>
                 <value>
-                    <numberValue>0.0</numberValue>
+                    <numberValue>1.0</numberValue>
                 </value>
             </inputParameters>
             <inputParameters>
@@ -845,6 +937,18 @@
                     <stringValue>[{&quot;apiName&quot;:&quot;Name&quot;,&quot;guid&quot;:&quot;column-6e4b&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:0,&quot;label&quot;:&quot;Movie Name&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;apiName&quot;:&quot;Description__c&quot;,&quot;guid&quot;:&quot;column-f736&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:1,&quot;label&quot;:&quot;Description&quot;,&quot;type&quot;:&quot;customRichText&quot;},{&quot;apiName&quot;:&quot;Start_date__c&quot;,&quot;guid&quot;:&quot;column-71fa&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:2,&quot;label&quot;:&quot;Start date&quot;,&quot;type&quot;:&quot;date&quot;},{&quot;apiName&quot;:&quot;End_date__c&quot;,&quot;guid&quot;:&quot;column-4b73&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:3,&quot;label&quot;:&quot;End date&quot;,&quot;type&quot;:&quot;date&quot;},{&quot;apiName&quot;:&quot;Price__c&quot;,&quot;guid&quot;:&quot;column-6d4c&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:4,&quot;label&quot;:&quot;Price&quot;,&quot;type&quot;:&quot;currency&quot;}]</stringValue>
                 </value>
             </inputParameters>
+            <inputParameters>
+                <name>isShowSearchBar</name>
+                <value>
+                    <booleanValue>true</booleanValue>
+                </value>
+            </inputParameters>
+            <inputParameters>
+                <name>maxRowSelection</name>
+                <value>
+                    <numberValue>1.0</numberValue>
+                </value>
+            </inputParameters>
             <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
             <isRequired>true</isRequired>
             <storeOutputAutomatically>true</storeOutputAutomatically>
@@ -855,8 +959,8 @@
     <screens>
         <name>Seats_Required</name>
         <label>Seats Required</label>
-        <locationX>1153</locationX>
-        <locationY>115</locationY>
+        <locationX>1084</locationX>
+        <locationY>213</locationY>
         <allowBack>true</allowBack>
         <allowFinish>true</allowFinish>
         <allowPause>true</allowPause>
@@ -874,7 +978,7 @@
                     <dataType>Number</dataType>
                     <fieldText>No. of Seats</fieldText>
                     <fieldType>InputField</fieldType>
-                    <isRequired>false</isRequired>
+                    <isRequired>true</isRequired>
                     <scale>0</scale>
                 </fields>
                 <fields>
@@ -894,13 +998,13 @@
                     <inputParameters>
                         <name>selectionMode</name>
                         <value>
-                            <stringValue>MULTI_SELECT</stringValue>
+                            <stringValue>SINGLE_SELECT</stringValue>
                         </value>
                     </inputParameters>
                     <inputParameters>
                         <name>minRowSelection</name>
                         <value>
-                            <numberValue>0.0</numberValue>
+                            <numberValue>1.0</numberValue>
                         </value>
                     </inputParameters>
                     <inputParameters>
@@ -913,6 +1017,12 @@
                         <name>columns</name>
                         <value>
                             <stringValue>[{&quot;apiName&quot;:&quot;Name&quot;,&quot;guid&quot;:&quot;column-0e44&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:0,&quot;label&quot;:&quot;Seat Type&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;apiName&quot;:&quot;Price__c&quot;,&quot;guid&quot;:&quot;column-782d&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:1,&quot;label&quot;:&quot;Price&quot;,&quot;type&quot;:&quot;currency&quot;}]</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>maxRowSelection</name>
+                        <value>
+                            <numberValue>1.0</numberValue>
                         </value>
                     </inputParameters>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
@@ -947,13 +1057,13 @@
                     <inputParameters>
                         <name>selectionMode</name>
                         <value>
-                            <stringValue>MULTI_SELECT</stringValue>
+                            <stringValue>SINGLE_SELECT</stringValue>
                         </value>
                     </inputParameters>
                     <inputParameters>
                         <name>minRowSelection</name>
                         <value>
-                            <numberValue>0.0</numberValue>
+                            <numberValue>1.0</numberValue>
                         </value>
                     </inputParameters>
                     <inputParameters>
@@ -966,6 +1076,12 @@
                         <name>columns</name>
                         <value>
                             <stringValue>[{&quot;apiName&quot;:&quot;Name&quot;,&quot;guid&quot;:&quot;column-871d&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:0,&quot;label&quot;:&quot;Timing&quot;,&quot;type&quot;:&quot;text&quot;},{&quot;apiName&quot;:&quot;Time__c&quot;,&quot;guid&quot;:&quot;column-41b7&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:1,&quot;label&quot;:&quot;Time&quot;,&quot;type&quot;:&quot;customDateTime&quot;},{&quot;apiName&quot;:&quot;&quot;,&quot;guid&quot;:&quot;column-e927&quot;,&quot;editable&quot;:false,&quot;hasCustomHeaderLabel&quot;:false,&quot;customHeaderLabel&quot;:&quot;&quot;,&quot;wrapText&quot;:true,&quot;order&quot;:1}]</stringValue>
+                        </value>
+                    </inputParameters>
+                    <inputParameters>
+                        <name>maxRowSelection</name>
+                        <value>
+                            <numberValue>1.0</numberValue>
                         </value>
                     </inputParameters>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
@@ -988,7 +1104,7 @@
     </screens>
     <start>
         <locationX>50</locationX>
-        <locationY>77</locationY>
+        <locationY>199</locationY>
         <connector>
             <targetReference>Getting_Movies_Record</targetReference>
         </connector>
